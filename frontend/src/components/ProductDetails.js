@@ -17,14 +17,14 @@ const ProductDetail = ({ productId, onClose }) => {
   const [error, setError] = useState(null);
   const [showAddReview, setShowAddReview] = useState(false);
   const [reviews, setReviews] = useState([]);
-  const [quantity,setQuantity]=useState("");
+  const [quantity, setQuantity] = useState("");
 
   // const userName =
   //   (localStorage.getItem("userData") &&
   //     JSON.parse(localStorage.getItem("userData")).name) ||
   //   "Demo";
 
-  const userId = localStorage.getItem("userData").userId;
+  const userId = localStorage.getItem("userData")?.userId;
   const navigate = useNavigate();
   const clearError = () => {
     setError(null);
@@ -48,24 +48,28 @@ const ProductDetail = ({ productId, onClose }) => {
   }, [productId]);
 
   const handleAddToCart = async () => {
-    const userId=JSON.parse(localStorage.getItem('userData'));
-    const id=userId.userId;
+    const userId = JSON.parse(localStorage.getItem("userData"));
+    const id = userId.userId;
 
     if (!id) {
       setError("Login first to add the product to the cart");
     } else {
       const userData = JSON.parse(localStorage.getItem("userData"));
       const userId = userData.userId;
-      const res = await CartService.AddToCart({userId:userId,productId:productId,quantity:quantity})
+      const res = await CartService.AddToCart({
+        userId: userId,
+        productId: productId,
+        quantity: quantity,
+      })
         .then((res) => {
-          console.log("result",res)
+          console.log("result", res);
           toast("Item Added To Cart!", {
             icon: "🥳",
             style: {
               borderRadius: "rgb(189, 224, 254)",
               background: "rgb(70, 11, 70)",
               color: "rgb(255, 210, 255)",
-            }
+            },
           });
           alert("Item added to cart");
         })
@@ -77,14 +81,20 @@ const ProductDetail = ({ productId, onClose }) => {
   };
   console.log("prouctdetails", product);
   const handlePlaceOrder = () => {
-    navigate("/placeOrder", {
-      state: {
-        productId: product._id,
-        price: product.price,
-        ProductImage: product.img,
-        ProductName: product.className,
-      },
-    });
+    const userId = JSON.parse(localStorage.getItem("userData"));
+    const id = userId?.userId;
+    if (!id) {
+      setError("Login first to add the product to the cart");
+    } else {
+      navigate("/placeOrder", {
+        state: {
+          productId: product._id,
+          price: product.price,
+          ProductImage: product.img,
+          ProductName: product.className,
+        },
+      });
+    }
   };
 
   return (
@@ -122,7 +132,7 @@ const ProductDetail = ({ productId, onClose }) => {
               <h3 className=" text-black product-detail-status">
                 Category: {product.category}
               </h3>
-              <QuantityInput quantity={quantity} setQuantity={setQuantity}/>
+              <QuantityInput quantity={quantity} setQuantity={setQuantity} />
               <div className="flex m-2 flex-row justify-around">
                 <button
                   className=" text-white border-blue-500 bg-gray-500 p-4 rounded-2xl product-detail-add-to-cart "

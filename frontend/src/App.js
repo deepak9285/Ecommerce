@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/NavBar";
 import Home from "./pages/Home/home";
 import LoginPage from "./pages/auth/Login";
-import Footer from "./components/Footer";
+import Footer from "./components/Footer/Footer";
 import Signup from "./pages/auth/Singnup";
 import Product from "./pages/Product";
 import Complaint from "./pages/ComplaintPage";
